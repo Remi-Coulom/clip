@@ -38,7 +38,7 @@ image::image(const image_spec& spec)
 
 image::image(const void* data, const image_spec& spec)
   : m_own_data(false),
-    m_data((char*)data),
+    m_data(static_cast<char*>(const_cast<void*>(data))),
     m_spec(spec) {
 }
 

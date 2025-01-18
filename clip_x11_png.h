@@ -18,14 +18,14 @@ namespace x11 {
 // Functions to convert clip::image into png data to store it in the
 // clipboard.
 
-void write_data_fn(png_structp png, png_bytep buf, png_size_t len) {
+inline void write_data_fn(png_structp png, png_bytep buf, png_size_t len) {
   std::vector<uint8_t>& output = *(std::vector<uint8_t>*)png_get_io_ptr(png);
   const size_t i = output.size();
   output.resize(i+len);
   std::copy(buf, buf+len, output.begin()+i);
 }
 
-bool write_png(const image& image,
+inline bool write_png(const image& image,
                std::vector<uint8_t>& output) {
   png_structp png = png_create_write_struct(PNG_LIBPNG_VER_STRING,
                                             nullptr, nullptr, nullptr);
@@ -97,7 +97,7 @@ struct read_png_io {
   size_t pos;
 };
 
-void read_data_fn(png_structp png, png_bytep buf, png_size_t len) {
+inline void read_data_fn(png_structp png, png_bytep buf, png_size_t len) {
   read_png_io& io = *(read_png_io*)png_get_io_ptr(png);
   if (io.pos < io.len) {
     size_t n = std::min(len, io.len-io.pos);
@@ -110,7 +110,7 @@ void read_data_fn(png_structp png, png_bytep buf, png_size_t len) {
   }
 }
 
-bool read_png(const uint8_t* buf,
+inline bool read_png(const uint8_t* buf,
               const size_t len,
               image* output_image,
               image_spec* output_spec) {
